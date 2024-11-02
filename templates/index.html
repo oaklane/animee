@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Info Viewer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        img { width: 300px; height: 450px; }
+        .navigation { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1 id="anime-title">{{ anime['title'] }}</h1>
+    <img id="anime-image" src="{{ anime['image_url'] }}" alt="Anime Poster">
+    <p id="anime-score">Score: {{ anime['score'] }}</p>
+    <p id="anime-synopsis">{{ anime['synopsis'] }}</p>
+
+    <div class="navigation">
+        <button id="prev-btn" onclick="navigate(currentIndex - 1)" {% if index == 0 %}disabled{% endif %}>Previous</button>
+        <button id="next-btn" onclick="navigate(currentIndex + 1)" {% if index == max_index %}disabled{% endif %}>Next</button>
+    </div>
+
+    <script>
+        let currentIndex = {{ index }};
+        const maxIndex = {{ max_index }};
+
+        function navigate(index) {
+            // Check if the index is within bounds
+            if (index < 0 || index > maxIndex) return;
+
+            // Update the current index
+            currentIndex = index;
+
+            // Fetch new anime data
+            fetch(`/anime/${index}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        // Update the HTML content with new anime data
+                        document.getElementById("anime-title").innerText = data.title;
+                        document.getElementById("anime-image").src = data.image_url;
+                        document.getElementById("anime-score").innerText = "Score: " + data.score;
+                        document.getElementById("anime-synopsis").innerText = data.synopsis;
+
+                        // Enable or disable buttons based on the index
+                        document.getElementById("prev-btn").disabled = (currentIndex === 0);
+                        document.getElementById("next-btn").disabled = (currentIndex === maxIndex);
+                    }
+                })
+                .catch(error => console.error('Error fetching anime:', error));
+        }
+    </script>
+</body>
+</html>

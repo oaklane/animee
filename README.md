@@ -1,1 +1,1 @@
-# animee
+Anime Navigator is a simple Python app that lets users browse a list of popular anime titles. By loading anime names from a .txt or .json file, the app allows users to navigate through each title using "Next" and "Previous" buttons. It's designed to be a lightweight, easy-to-use tool for anime fans and a fun project for beginner programmers.
